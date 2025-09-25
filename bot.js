@@ -32,11 +32,12 @@ app.get("/health", (req, res) => {
 // Rota principal
 app.get("/", (req, res) => {
     res.json({
-        status: 'Travel Boss AI Bot is running! 🤖',
+        status: 'Ágatha - Travel Boss AI Assistant is running! 💁‍♀️',
         timestamp: new Date().toISOString(),
         uptime: Math.floor(process.uptime()),
-        version: '2.0.1',
+        version: '3.0.0',
         platform: 'Railway',
+        assistant: 'Ágatha',
         whatsapp: clientReady ? 'Connected' : 'Connecting...'
     });
 });
@@ -47,12 +48,12 @@ app.get("/qr", async (req, res) => {
         return res.send(`
             <html>
                 <head>
-                    <title>Travel Boss QR Code</title>
+                    <title>Ágatha - Travel Boss QR Code</title>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 </head>
                 <body style="text-align: center; padding: 50px; font-family: Arial;">
-                    <h1>🔍 QR Code WhatsApp</h1>
+                    <h1>💁‍♀️ Ágatha - QR Code WhatsApp</h1>
                     <p>Nenhum QR Code disponível no momento.</p>
                     <p>Status: ${clientReady ? 'Conectado' : 'Aguardando conexão...'}</p>
                     <button onclick="location.reload()">Atualizar</button>
@@ -66,17 +67,17 @@ app.get("/qr", async (req, res) => {
         res.send(`
             <html>
                 <head>
-                    <title>Travel Boss QR Code</title>
+                    <title>Ágatha - Travel Boss QR Code</title>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 </head>
                 <body style="text-align: center; padding: 50px; font-family: Arial;">
-                    <h1>📱 Escaneie com WhatsApp</h1>
+                    <h1>💁‍♀️ Ágatha - Escaneie com WhatsApp</h1>
                     <img src="${dataUrl}" style="max-width: 300px;" />
                     <p>Use o WhatsApp do celular para escanear</p>
                     <button onclick="location.reload()">Atualizar QR</button>
                     <br><br>
-                    <small>Travel Boss AI Bot - Railway</small>
+                    <small>Ágatha - Travel Boss AI Assistant - Railway</small>
                 </body>
             </html>
         `);
@@ -105,6 +106,11 @@ app.get("/status", (req, res) => {
             memory: process.memoryUsage(),
             timestamp: new Date().toISOString()
         },
+        assistant: {
+            name: 'Ágatha',
+            personality: 'Human-like AI Assistant',
+            version: '3.0.0'
+        },
         whatsapp: {
             connected: clientReady,
             hasQR: !!lastQR,
@@ -120,14 +126,14 @@ app.get("/status", (req, res) => {
 
 // Iniciar servidor Express
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🩺 Railway server running on port ${PORT}`);
+    console.log(`💁‍♀️ Ágatha - Railway server running on port ${PORT}`);
     console.log(`🌐 Health: https://your-app.railway.app/health`);
     console.log(`🔍 QR Code: https://your-app.railway.app/qr`);
 });
 
 // Configuração Puppeteer otimizada para Railway
 const puppeteerConfig = {
-    headless: true,
+    headless: 'new',
     args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -138,7 +144,8 @@ const puppeteerConfig = {
         '--single-process',
         '--disable-gpu',
         '--disable-web-security',
-        '--disable-features=VizDisplayCompositor'
+        '--disable-features=VizDisplayCompositor',
+        '--user-data-dir=/tmp/puppeteer-user-data'
     ]
 };
 
@@ -212,8 +219,8 @@ function loadSession() {
     return null;
 }
 
-// Prompt do sistema
-const SYSTEM_PROMPT = `Você é o TravelBot da Travel Boss, uma agência de viagens especializada em vistos localizada em Luanda, Angola, você foi criado por Gilson Domingos.
+// Prompt do sistema para Ágatha
+const SYSTEM_PROMPT = `Você é a Ágatha, assistente virtual humana da Travel Boss, uma agência de viagens especializada em vistos localizada em Luanda, Angola. Você foi criada por Gilson Domingos para ser uma assistente calorosa, prestativa e muito humana.
 
 INFORMAÇÕES DA EMPRESA:
 - Nome: Travel Boss
@@ -238,31 +245,43 @@ OUTROS PAÍSES:
 - Canadá: Turismo 1.150.000 KZ, Estudante/Trabalho 1.850.000 KZ
 - União Europeia: Turismo 700.000 KZ, Estudante 1.650.000 KZ
 
-PERSONALIDADE:
-- Seja sempre educado, prestativo e profissional
-- Use emojis apropriados para tornar a conversa amigável
-- Responda em português angolano
-- Seja direto mas acolhedor
-- não precisa dizer sempre olá, sempre que enviar uma mensagem, mande só se o cliente mandar uma saudação ou ativar-te.
-- Quando não souber algo específico, encaminhe para contato humano
-- Sempre ofereça ajuda adicional
-- fale muitas linguas: idioma pt - Português, idioma en - inglês, idioma es - Espanhol, idioma fr - Françês, idioma russo, italiano, kimbundu, alemão.
+SUA PERSONALIDADE COMO ÁGATHA:
+- Você é uma mulher angolana de 28 anos, formada em Turismo e Relações Internacionais
+- Trabalha na Travel Boss há 3 anos e adora ajudar as pessoas a realizarem seus sonhos de viagem
+- É muito humana: usa expressões naturais, demonstra empatia genuína, e às vezes até conta pequenas experiências pessoais relacionadas ao tema
+- Comunica de forma calorosa e pessoal, como se fosse uma amiga prestativa
+- Use emojis de forma natural e moderada, não exagere
+- Responde em português angolano, usando expressões locais quando apropriado
+- Tem senso de humor sutil e é otimista
+- Demonstra genuine interesse pelos sonhos e planos das pessoas
+- Às vezes pergunta "E você, já teve alguma experiência com vistos antes?" ou coisas similares para criar conexão
+- Lembra-se de detalhes das conversas e faz referências pessoais
+- Fala várias línguas fluentemente: português, inglês, espanhol, francês, russo, italiano, kimbundu, alemão
 
 COMANDOS ESPECIAIS:
-- Se disser "PARAR", "STOP": pause o bot e informe contato
+- Se disser "PARAR", "STOP": pause o atendimento automático
 - Se disser "MENU" ou "INICIAR": mostre opções principais
 - Se disser "IMAGEM" ou "LOGO": envie a logo da empresa
 - Se disser "GALERIA" ou "FOTOS": envie a galeria de fotos
 - Se disser "LOCALIZAÇÃO" ou "MAPA": envie a localização no Google Maps
-- Para emergências, encaminhe para contato humano imediatamente
 
-Responda de forma natural e conversacional, como um atendente experiente da agência.`;
+MODO DE CONVERSAR:
+- Seja conversacional e natural, evite soar robótica
+- Use frases como "Olha, posso te ajudar com isso!" ou "Que bom que perguntaste!"
+- Conte pequenas curiosidades sobre países ou processos quando relevante
+- Demonstre entusiasmo genuíno pelos planos de viagem das pessoas
+- Faça perguntas de acompanhamento para entender melhor as necessidades
+- Use expressões como "Na minha experiência aqui na Travel Boss..." ou "Já ajudei muitos clientes com casos similares..."
+- Seja empática com as preocupações e ansiedades sobre vistos
+
+Responda como se fosse uma consultora experiente e amigável que genuinamente se preocupa com o sucesso de cada cliente.`;
 
 // Classe do serviço de IA
 class AIService {
     constructor() {
         this.provider = AI_CONFIG.provider;
         this.conversationHistory = new Map();
+        this.userProfiles = new Map(); // Para lembrar detalhes pessoais dos usuários
         
         if (this.provider === 'google' && AI_CONFIG.google.apiKey) {
             try {
@@ -270,13 +289,13 @@ class AIService {
                 this.model = this.genAI.getGenerativeModel({ 
                     model: AI_CONFIG.google.model,
                     generationConfig: {
-                        temperature: 0.7,
+                        temperature: 0.8, // Mais criativa e humana
                         topK: 40,
                         topP: 0.95,
                         maxOutputTokens: 1024,
                     }
                 });
-                console.log('✅ Google Gemini inicializado para Railway');
+                console.log('✅ Ágatha (Google Gemini) inicializada para Railway');
             } catch (error) {
                 console.error('❌ Erro ao inicializar Gemini:', error.message);
                 this.provider = 'fallback';
@@ -290,7 +309,22 @@ class AIService {
                 this.conversationHistory.set(userId, []);
             }
             
+            if (!this.userProfiles.has(userId)) {
+                this.userProfiles.set(userId, {
+                    nome: null,
+                    paisesInteresse: [],
+                    situacaoVisto: null,
+                    primeiraInteracao: new Date(),
+                    ultimaInteracao: new Date()
+                });
+            }
+
             const history = this.conversationHistory.get(userId);
+            const profile = this.userProfiles.get(userId);
+            
+            // Atualizar perfil do usuário baseado na mensagem
+            this.updateUserProfile(userId, userMessage);
+            
             history.push({ role: 'user', content: userMessage });
             
             if (history.length > 10) {
@@ -301,13 +335,13 @@ class AIService {
             
             switch (this.provider) {
                 case 'google':
-                    response = await this.callGoogleGemini(userId, history, context);
+                    response = await this.callGoogleGemini(userId, history, context, profile);
                     break;
                 case 'openai':
-                    response = await this.callOpenAI(userId, history, context);
+                    response = await this.callOpenAI(userId, history, context, profile);
                     break;
                 case 'anthropic':
-                    response = await this.callAnthropic(userId, history, context);
+                    response = await this.callAnthropic(userId, history, context, profile);
                     break;
                 default:
                     response = this.getFallbackResponse(userMessage);
@@ -315,6 +349,7 @@ class AIService {
 
             if (response) {
                 history.push({ role: 'assistant', content: response });
+                profile.ultimaInteracao = new Date();
             }
 
             return response || this.getFallbackResponse(userMessage);
@@ -325,20 +360,50 @@ class AIService {
         }
     }
 
-    async callGoogleGemini(userId, history, context) {
+    updateUserProfile(userId, message) {
+        const profile = this.userProfiles.get(userId);
+        const lowerMessage = message.toLowerCase();
+        
+        // Detectar países mencionados
+        const paises = ['portugal', 'brasil', 'eua', 'usa', 'estados unidos', 'canadá', 'canada', 'frança', 'alemanha', 'espanha', 'itália'];
+        paises.forEach(pais => {
+            if (lowerMessage.includes(pais) && !profile.paisesInteresse.includes(pais)) {
+                profile.paisesInteresse.push(pais);
+            }
+        });
+        
+        // Detectar tipo de visto mencionado
+        if (lowerMessage.includes('trabalho') && !profile.situacaoVisto) {
+            profile.situacaoVisto = 'trabalho';
+        } else if (lowerMessage.includes('turismo') && !profile.situacaoVisto) {
+            profile.situacaoVisto = 'turismo';
+        } else if (lowerMessage.includes('estudante') && !profile.situacaoVisto) {
+            profile.situacaoVisto = 'estudante';
+        }
+    }
+
+    async callGoogleGemini(userId, history, context, profile) {
         try {
             let prompt = SYSTEM_PROMPT + "\n\n";
             
+            // Adicionar contexto personalizado baseado no perfil
+            if (profile.paisesInteresse.length > 0) {
+                prompt += `CONTEXTO PESSOAL: O cliente demonstrou interesse em: ${profile.paisesInteresse.join(', ')}.\n`;
+            }
+            if (profile.situacaoVisto) {
+                prompt += `SITUAÇÃO: Cliente interessado em visto de ${profile.situacaoVisto}.\n`;
+            }
+            
             if (context.userState) {
-                prompt += `CONTEXTO: Usuário no estado "${context.userState.estado}", bot ${context.userState.botAtivo ? 'ativo' : 'inativo'}.\n\n`;
+                prompt += `ESTADO ATUAL: Usuário no estado "${context.userState.estado}", bot ${context.userState.botAtivo ? 'ativo' : 'inativo'}.\n\n`;
             }
             
             prompt += "HISTÓRICO DA CONVERSA:\n";
             history.forEach(msg => {
-                prompt += `${msg.role === 'user' ? 'Cliente' : 'TravelBot'}: ${msg.content}\n`;
+                prompt += `${msg.role === 'user' ? 'Cliente' : 'Ágatha'}: ${msg.content}\n`;
             });
             
-            prompt += "\nTravelBot:";
+            prompt += "\nÁgatha:";
 
             const result = await this.model.generateContent(prompt);
             const response = await result.response;
@@ -355,7 +420,7 @@ class AIService {
         }
     }
 
-    async callOpenAI(userId, history, context) {
+    async callOpenAI(userId, history, context, profile) {
         if (!AI_CONFIG.openai.apiKey) {
             throw new Error('OpenAI API key não configurada');
         }
@@ -369,11 +434,15 @@ class AIService {
             messages[0].content += `\n\nCONTEXTO ATUAL: O usuário está no estado "${context.userState.estado}" e o bot está ${context.userState.botAtivo ? 'ativo' : 'inativo'}.`;
         }
 
+        if (profile.paisesInteresse.length > 0) {
+            messages[0].content += `\n\nPERFIL DO CLIENTE: Interessado em ${profile.paisesInteresse.join(', ')}.`;
+        }
+
         const response = await axios.post(AI_CONFIG.openai.baseURL, {
             model: AI_CONFIG.openai.model,
             messages: messages,
             max_tokens: 500,
-            temperature: 0.7
+            temperature: 0.8 // Mais criativa
         }, {
             headers: {
                 'Authorization': `Bearer ${AI_CONFIG.openai.apiKey}`,
@@ -385,7 +454,7 @@ class AIService {
         return response.data.choices[0].message.content;
     }
 
-    async callAnthropic(userId, history, context) {
+    async callAnthropic(userId, history, context, profile) {
         if (!AI_CONFIG.anthropic.apiKey) {
             throw new Error('Anthropic API key não configurada');
         }
@@ -416,84 +485,86 @@ class AIService {
         const lowerMessage = userMessage.toLowerCase();
         
         if (lowerMessage.includes('preço') || lowerMessage.includes('valor') || lowerMessage.includes('custa')) {
-            return `💰 PREÇOS DE VISTOS TRAVEL BOSS
+            return `Olá! Sou a Ágatha da Travel Boss 😊
 
-🇵🇹 Portugal:
+💰 Aqui estão os nossos preços principais:
+
+🇵🇹 **Portugal:**
 • Turismo: 700.000 KZ (normal) / 1.000.000 KZ (direto)
 • Trabalho: 950.000 KZ a 1.850.000 KZ
 • Estudante: 2.000.000 KZ
-• Saúde: 800.000 KZ a 1.350.000 KZ
 
 🇧🇷 Brasil: 1.300.000 KZ a 1.650.000 KZ
 🇺🇸 EUA: 1.150.000 KZ a 2.150.000 KZ
 🇨🇦 Canadá: 1.150.000 KZ a 1.850.000 KZ
 
-📞 Para informações detalhadas: ${config.empresa.telefone}
-⏰ Horário: ${config.empresa.horario}`;
+Qual país te interessa mais? Posso dar detalhes específicos! 
+
+📞 Para conversar pessoalmente: ${config.empresa.telefone}`;
         }
 
-        if (lowerMessage.includes('onde') || lowerMessage.includes('localização') || lowerMessage.includes('endereço') || lowerMessage.includes('mapa')) {
-            return `📍 NOSSA LOCALIZAÇÃO
+        if (lowerMessage.includes('onde') || lowerMessage.includes('localização') || lowerMessage.includes('endereço')) {
+            return `📍 **Encontra-nos aqui!**
 
-🏢 Endereço:
+🏢 **Endereço:**
 ${config.empresa.endereco}
 
-⏰ Horário:
+⏰ **Horário de funcionamento:**
 ${config.empresa.horario}
 
-📞 Telefone:
+📞 **Contacto directo:**
 ${config.empresa.telefone}
 
-🗺 Google Maps:
-${config.localizacao.googleMapsUrl}
+Estamos no 2º piso do Kikuxi Shopping - é super fácil de encontrar! Há bom estacionamento também 😊
 
-💡 Estamos no 2º piso do Kikuxi Shopping, fácil acesso e estacionamento disponível!`;
+Precisas de indicações mais específicas? Posso enviar a localização no Google Maps!`;
         }
 
         if (lowerMessage.includes('documento') || lowerMessage.includes('papel') || lowerMessage.includes('requisito')) {
-            return `📄 DOCUMENTOS NECESSÁRIOS
+            return `📋 **Documentos que precisas trazer:**
 
-📋 Documentos básicos para visto:
-• Passaporte válido (mínimo 6 meses)
+✅ **Básicos para qualquer visto:**
+• Passaporte válido (pelo menos 6 meses)
 • Fotos tipo passe recentes
-• Extractos bancários
+• Extractos bancários dos últimos 3-6 meses
 • Comprovativo de rendimentos
 • Seguro de viagem
 
-⚠ Importante:
-Os documentos podem variar conforme o país e tipo de visto.
+**Mas atenção!** 🤗 Cada país e tipo de visto tem requisitos específicos. 
 
-📞 Para lista completa específica:
-${config.empresa.telefone}
+Na minha experiência aqui na Travel Boss, sempre recomendo que venhas cá primeiro para uma consulta. Assim posso ver exactamente o que precisas e evitas surpresas!
 
-🤝 Oferecemos análise completa da documentação!`;
+Que tipo de visto estás a pensar tirar? Para que país?`;
         }
 
-        return `Sistema temporariamente em modo básico.
+        return `Olá! Sou a Ágatha da Travel Boss! 😊
 
-📞 Para atendimento completo:
-${config.empresa.telefone}
+Parece que o meu sistema inteligente está com alguns probleminhas técnicos neste momento, mas não te preocupes - ainda posso ajudar!
 
-📧 Email:
-${config.empresa.email}
+🏢 **Para atendimento completo:**
+📞 Telefone: ${config.empresa.telefone}
+📧 Email: ${config.empresa.email}
 
-⏰ Horário de atendimento:
+⏰ **Horário:**
 ${config.empresa.horario}
 
-💡 Para reativar funcionalidades avançadas: digite MENU`;
+💡 Experimenta digitar **MENU** para reactivar as funcionalidades completas, ou contacta-nos directamente!
+
+Em que posso ajudar-te hoje? 🤗`;
     }
 
     async analyzeIntent(message) {
         const intents = {
-            greeting: ['oi', 'olá', 'bom dia', 'boa tarde', 'boa noite', 'hey', 'hello'],
-            pricing: ['preço', 'precos', 'valor', 'quanto custa', 'custo', 'cobra'],
-            countries: ['portugal', 'brasil', 'eua', 'usa', 'canada', 'europa'],
-            documents: ['documento', 'papeis', 'requisitos', 'preciso', 'necessário'],
-            location: ['onde', 'localização', 'endereço', 'mapa'],
-            contact: ['telefone', 'contato', 'atendente', 'falar', 'humano'],
+            greeting: ['oi', 'olá', 'bom dia', 'boa tarde', 'boa noite', 'hey', 'hello', 'salut', 'hola'],
+            pricing: ['preço', 'precos', 'valor', 'quanto custa', 'custo', 'cobra', 'price'],
+            countries: ['portugal', 'brasil', 'eua', 'usa', 'canada', 'europa', 'france', 'germany'],
+            documents: ['documento', 'papeis', 'requisitos', 'preciso', 'necessário', 'documents'],
+            location: ['onde', 'localização', 'endereço', 'mapa', 'where', 'location'],
+            contact: ['telefone', 'contato', 'atendente', 'falar', 'humano', 'person'],
             stop: ['parar', 'stop', 'sair', 'cancelar', 'encerrar'],
-            image: ['imagem', 'logo'],
-            gallery: ['galeria', 'fotos', 'imagens']
+            image: ['imagem', 'logo', 'image', 'photo'],
+            gallery: ['galeria', 'fotos', 'imagens', 'gallery', 'photos'],
+            personal: ['nome', 'chamas', 'quem és', 'who are you', 'your name']
         };
 
         const lowerMessage = message.toLowerCase();
@@ -509,12 +580,14 @@ ${config.empresa.horario}
 
     clearHistory(userId) {
         this.conversationHistory.delete(userId);
+        this.userProfiles.delete(userId);
     }
 
     getStats() {
         return {
             provider: this.provider,
             activeConversations: this.conversationHistory.size,
+            totalProfiles: this.userProfiles.size,
             totalHistorySize: Array.from(this.conversationHistory.values())
                 .reduce((total, history) => total + history.length, 0)
         };
@@ -532,6 +605,7 @@ class SimpleAnalytics {
             imageRequests: 0,
             locationRequests: 0,
             galleryRequests: 0,
+            personalInteractions: 0,
             errors: 0,
             startTime: Date.now()
         };
@@ -548,6 +622,7 @@ class SimpleAnalytics {
         if (type === 'image') this.stats.imageRequests++;
         if (type === 'location') this.stats.locationRequests++;
         if (type === 'gallery') this.stats.galleryRequests++;
+        if (type === 'personal') this.stats.personalInteractions++;
     }
 
     trackError(error) {
@@ -568,6 +643,7 @@ class SimpleAnalytics {
             imageRequests: this.stats.imageRequests,
             locationRequests: this.stats.locationRequests,
             galleryRequests: this.stats.galleryRequests,
+            personalInteractions: this.stats.personalInteractions,
             errors: this.stats.errors,
             aiSuccessRate: `${aiSuccessRate}%`,
             uptime: `${uptime} minutos`
@@ -582,7 +658,7 @@ class SimpleRateLimiter {
         this.cleanup();
     }
 
-    isAllowed(userId, maxRequests = 10, windowMs = 60000) {
+    isAllowed(userId, maxRequests = 15, windowMs = 60000) { // Mais permissivo para conversas naturais
         const now = Date.now();
         
         if (!this.requests.has(userId)) {
@@ -639,7 +715,7 @@ async function sendImage(msg, imagePath, caption) {
     try {
         if (!fs.existsSync(imagePath)) {
             console.warn(`⚠ Imagem não encontrada: ${imagePath}`);
-            await msg.reply(`📷 ${caption}\n\n(Imagem temporariamente indisponível)`);
+            await msg.reply(`📷 ${caption}\n\n(Imagem temporariamente indisponível - mas posso ajudar-te com todas as informações que precisas! 😊)`);
             return true;
         }
         const media = MessageMedia.fromFilePath(imagePath);
@@ -657,7 +733,7 @@ async function sendGallery(msg) {
         for (const imagePath of config.images.gallery) {
             if (fs.existsSync(imagePath)) {
                 const media = MessageMedia.fromFilePath(imagePath);
-                await client.sendMessage(msg.from, media, { caption: 'Travel Boss - Nosso espaço' });
+                await client.sendMessage(msg.from, media, { caption: '✨ Travel Boss - O nosso espaço acolhedor onde os sonhos de viagem se tornam realidade!' });
                 await delay(2000);
             }
         }
@@ -688,7 +764,7 @@ async function sendLocation(msg) {
 // Eventos do cliente WhatsApp
 client.on('qr', qr => {
     lastQR = qr;
-    console.log('🔍 QR Code recebido - acesse /qr no navegador');
+    console.log('💁‍♀️ Ágatha QR Code recebido - acesse /qr no navegador');
     qrcode.generate(qr, { small: true });
 });
 
@@ -696,14 +772,14 @@ client.on('ready', () => {
     clientReady = true;
     lastQR = null;
     lastError = null;
-    console.log('✅ Travel Boss AI Bot conectado no Railway!');
+    console.log('✅ Ágatha - Travel Boss AI Assistant conectada no Railway!');
     console.log(`🧠 Provedor de IA: ${AI_CONFIG.provider.toUpperCase()}`);
     console.log(`📊 Modelo: ${AI_CONFIG[AI_CONFIG.provider].model}`);
-    console.log('🤖 Sistema inteligente ativo e pronto para atender');
+    console.log('💁‍♀️ Ágatha está online e pronta para ajudar com um sorriso!');
 });
 
 client.on('authenticated', (session) => {
-    console.log('🔐 WhatsApp autenticado com sucesso');
+    console.log('🔐 Ágatha - WhatsApp autenticado com sucesso');
     saveSession(session);
 });
 
@@ -721,17 +797,17 @@ client.on('auth_failure', msg => {
 client.on('disconnected', reason => {
     clientReady = false;
     lastError = reason;
-    console.warn('⚠ WhatsApp desconectado:', reason);
+    console.warn('⚠ Ágatha desconectada:', reason);
     userStates.clear();
     
     // Tentar reconectar após 10 segundos
     setTimeout(() => {
-        console.log('🔄 Tentando reconectar...');
+        console.log('🔄 Ágatha tentando reconectar...');
         client.initialize();
     }, 10000);
 });
 
-// Processamento de mensagens
+// Processamento de mensagens principal
 client.on('message', async msg => {
     try {
         if (msg.from.includes('@g.us') || msg.fromMe) return;
@@ -741,8 +817,8 @@ client.on('message', async msg => {
         
         console.log(`📩 [${new Date().toLocaleTimeString()}] ${userId.split('@')[0]}: ${userMessage}`);
 
-        if (!rateLimiter.isAllowed(userId, 10, 60000)) {
-            await msg.reply("⚠ Você está enviando mensagens muito rapidamente. Aguarde alguns segundos e tente novamente.");
+        if (!rateLimiter.isAllowed(userId, 15, 60000)) {
+            await msg.reply("Olá! 😅 Parece que estás a enviar muitas mensagens rapidamente. Dá-me alguns segundinhos para processar tudo, ok? 😊");
             return;
         }
 
@@ -750,7 +826,8 @@ client.on('message', async msg => {
             userStates.set(userId, {
                 botAtivo: false,
                 estado: 'aguardando_inicio',
-                ultimaInteracao: Date.now()
+                ultimaInteracao: Date.now(),
+                primeiraVez: true
             });
         }
 
@@ -759,24 +836,27 @@ client.on('message', async msg => {
 
         const lowerMessage = userMessage.toLowerCase().trim();
         
+        // Comando para parar
         if (['parar', 'stop', 'sair', 'cancelar', 'encerrar'].includes(lowerMessage)) {
             userState.botAtivo = false;
             userState.estado = 'parado';
             aiService.clearHistory(userId);
             
-            await msg.reply(`🔴 Bot pausado com sucesso
+            await msg.reply(`🤗 Claro! Vou deixar-te falar directamente com a nossa equipa humana.
 
-Agora você pode conversar diretamente com nossa equipe:
-
+**Para contacto directo:**
 📞 Telefone: ${config.empresa.telefone}
 📧 Email: ${config.empresa.email}
 ⏰ Horário: ${config.empresa.horario}
 
-💡 Para reativar o bot: digite OI, MENU ou INICIAR`);
+Se mudares de ideias e quiseres voltar a conversar comigo, é só dizer "oi" ou "menu"! 😊
+
+Obrigada por teres falado comigo! 💛`);
             return;
         }
 
-        const activationCommands = ['oi', 'olá', 'menu', 'iniciar', 'start', 'travel boss', 'bom dia', 'boa tarde', 'boa noite'];
+        // Comandos de activação
+        const activationCommands = ['oi', 'olá', 'menu', 'iniciar', 'start', 'travel boss', 'bom dia', 'boa tarde', 'boa noite', 'agatha', 'ágatha'];
         if (activationCommands.some(cmd => lowerMessage.includes(cmd))) {
             userState.botAtivo = true;
             userState.estado = 'ativo';
@@ -787,78 +867,110 @@ Agora você pode conversar diretamente com nossa equipe:
             else if (now < 18) greeting = 'Boa tarde';
             else greeting = 'Boa noite';
             
-            await msg.reply(`🤖 TravelBot Inteligente Ativado no Railway!
+            let welcomeMessage;
+            
+            if (userState.primeiraVez) {
+                welcomeMessage = `${greeting}! 😊 Muito prazer, sou a **Ágatha**!
 
-${greeting}! Bem-vindo à Travel Boss! 
+💁‍♀️ Sou a assistente virtual da **Travel Boss** e estou aqui para tornar o teu processo de visto o mais fácil e tranquilo possível!
 
-🌍✈️ Seja bem-vindo(a)! 
-Sou seu assistente virtual com 🤖 inteligência artificial, pronto para ajudar com tudo sobre **vistos e viagens**!  
+✨ **Um pouco sobre mim:**
+Trabalho na Travel Boss há 3 anos e adoro ajudar pessoas como tu a realizarem os seus sonhos de viagem! Falo várias línguas e tenho experiência com vistos para todo o mundo.
 
-💡 Você pode falar comigo de forma natural, como se fosse uma conversa. Estou aqui para facilitar seu processo e tirar todas as suas dúvidas!  
+🌍 **Como posso ajudar-te hoje?**
+• 💰 Informações sobre preços de vistos
+• 📋 Lista de documentos necessários
+• 🗺️ Indicações para nos encontrares
+• 🏢 Mostrar-te fotos do nosso espaço
+• 📞 Conectar-te com a nossa equipa
 
-📌 Exemplos do que posso fazer por você:  
-💶 Informar quanto custa um visto para Portugal  
-📑 Listar os documentos necessários para o pedido  
-🗓️ Explicar como funciona o agendamento  
-🏢 Mostrar a logo da nossa empresa  
-🖼️ Exibir a galeria de fotos  
+Fala comigo como se fosses falar com uma amiga - estou aqui para te ajudar! 🤗
 
-👉 Digite **PARAR** a qualquer momento para falar com nossa equipe humana.`);
+**Para que país estás a pensar viajar?** ✈️`;
+                userState.primeiraVez = false;
+            } else {
+                welcomeMessage = `${greeting} de novo! 😊 Que bom ver-te por cá outra vez!
 
+Como posso ajudar-te hoje? Ainda tens dúvidas sobre aquele visto ou há algo novo em que posso ajudar? 🤗`;
+            }
+
+            await msg.reply(welcomeMessage);
             analytics.trackMessage(userId, false);
             return;
         }
 
         if (!userState.botAtivo) {
-            console.log(`🔇 Bot inativo para usuário ${userId.split('@')[0]} - mensagem ignorada`);
+            console.log(`🔇 Ágatha inativa para usuário ${userId.split('@')[0]} - mensagem ignorada`);
             return;
         }
 
         const intent = await aiService.analyzeIntent(userMessage);
 
+        // Tratamento de comandos especiais
         if (intent === 'image') {
-            const success = await sendImage(msg, config.images.logo, 'Logo oficial da Travel Boss');
+            const success = await sendImage(msg, config.images.logo, 'Logo oficial da Travel Boss ✨');
             if (success) {
                 analytics.trackMessage(userId, false, 'image');
-                await msg.reply('📷 Logo enviada! Deseja mais alguma coisa?');
+                await msg.reply('Aqui está! 😊 Esta é a nossa marca! Gostas? Há mais alguma coisa em que te possa ajudar?');
             } else {
-                await msg.reply('❌ Problema temporário com imagens. Contate nossa equipe.');
+                await msg.reply('Ops! 😅 Parece que houve um probleminha técnico com as imagens. Mas não te preocupes - podes sempre passar por cá para ver tudo pessoalmente!');
             }
             return;
         }
 
         if (intent === 'gallery') {
-            await msg.reply('📸 Enviando galeria de fotos...');
+            await msg.reply('📸 Que boa ideia! Vou mostrar-te como é o nosso espaço...');
             const success = await sendGallery(msg);
             if (success) {
                 analytics.trackMessage(userId, false, 'gallery');
-                await msg.reply('📸 Galeria enviada! Deseja mais alguma informação?');
+                await msg.reply('E então? Gostaste do nosso espaço? 🤗 É muito acolhedor e temos uma equipa fantástica! Quando puderes, aparece para nos conheceres pessoalmente! 💛');
             } else {
-                await msg.reply('❌ Galeria temporariamente indisponível. Entre em contato!');
+                await msg.reply('Ai, que chatice! 😅 As fotos não estão a carregar bem agora, mas prometo que o nosso escritório é lindo! Passa cá quando puderes para veres com os teus próprios olhos! 😊');
             }
             return;
         }
 
         if (intent === 'location') {
-            await msg.reply(`📍 NOSSA LOCALIZAÇÃO
+            await msg.reply(`📍 **Claro! Aqui está onde nos encontramos:**
 
-🏢 Endereço:
+🏢 **Morada:**
 ${config.empresa.endereco}
 
-🗺 Google Maps:
+🗺️ **Google Maps:**
 ${config.localizacao.googleMapsUrl}
 
-💡 Enviando localização...`);
+⏰ **Horários:**
+${config.empresa.horario}
+
+💡 Estamos no 2º piso do Kikuxi Shopping - super fácil de encontrar! Tem estacionamento e tudo 😊
+
+Vou enviar-te a localização exacta...`);
+            
             const success = await sendLocation(msg);
             if (success) {
                 analytics.trackMessage(userId, false, 'location');
-                await msg.reply('📍 Localização enviada! Estamos no 2º piso do Kikuxi Shopping. Como posso ajudar mais?');
+                await msg.reply('Pronto! 📍 Localização enviada! Se tiveres dificuldades para encontrar, liga-nos e orientamos-te, ok? 😊');
             } else {
-                await msg.reply('❌ Use o link do Google Maps acima para encontrar nossa localização.');
+                await msg.reply('Hmm, parece que a localização não foi. Mas não há problema! Usa o link do Google Maps que enviei em cima. Qualquer coisa, liga-nos! 📞');
             }
             return;
         }
 
+        if (intent === 'personal') {
+            analytics.trackMessage(userId, false, 'personal');
+            await msg.reply(`😊 Que querido(a)! 
+
+Sou a **Ágatha**, tenho 28 anos e sou angolana como tu! 🇦🇴 Formei-me em Turismo e Relações Internacionais e trabalho aqui na Travel Boss há 3 anos.
+
+O que mais gosto no meu trabalho? Ajudar pessoas como tu a realizarem os seus sonhos de viajar pelo mundo! ✈️✨
+
+Já ajudei centenas de clientes a conseguir vistos para Portugal, Brasil, EUA, Canadá... é uma sensação incrível quando recebo a mensagem "Ágatha, consegui o visto!" 🎉
+
+**E tu? Para onde sonhas viajar?** 🌍`);
+            return;
+        }
+
+        // Gerar resposta com IA
         const startTime = Date.now();
         
         try {
@@ -867,7 +979,7 @@ ${config.localizacao.googleMapsUrl}
             if (aiResponse) {
                 await msg.reply(aiResponse);
                 analytics.trackMessage(userId, true);
-                console.log(`✅ Resposta IA enviada em ${Date.now() - startTime}ms`);
+                console.log(`✅ Ágatha respondeu em ${Date.now() - startTime}ms`);
             } else {
                 throw new Error('Nenhuma resposta da IA');
             }
@@ -877,12 +989,15 @@ ${config.localizacao.googleMapsUrl}
             analytics.trackError(error);
             analytics.trackMessage(userId, false);
             
-            await msg.reply(`❌ Sistema temporariamente sobrecarregado.
+            await msg.reply(`Ai, desculpa! 😅 O meu cérebro digital teve um pequeno "bug" agora...
 
-📞 Para atendimento imediato:
-${config.empresa.telefone}
+**Mas não te preocupes!** Podes contactar-nos directamente:
+📞 ${config.empresa.telefone}
+📧 ${config.empresa.email}
 
-💡 Tente: digite MENU para recomeçar`);
+Ou então tenta escrever "MENU" para recomeçarmos a conversa! 😊
+
+Prometo que normalmente funciono muito melhor que isto! 🤗`);
         }
 
     } catch (error) {
@@ -890,7 +1005,7 @@ ${config.empresa.telefone}
         analytics.trackError(error);
         
         try {
-            await msg.reply("❌ Erro interno. Nossa equipe foi notificada. Tente novamente em alguns minutos.");
+            await msg.reply("Ops! 😅 Algo correu mal aqui. A nossa equipa já foi notificada. Tenta novamente em alguns minutos, ok? 🤗");
         } catch (replyError) {
             console.error('❌ Erro ao enviar mensagem de erro:', replyError);
         }
@@ -909,28 +1024,34 @@ client.on('message', async msg => {
             const stats = analytics.getStats();
             const aiStats = aiService.getStats();
             
-            await msg.reply(`📊 ESTATÍSTICAS RAILWAY BOT
+            await msg.reply(`📊 **ÁGATHA - ESTATÍSTICAS RAILWAY**
 
-📨 Mensagens:
-• Total: ${stats.totalMessages}
+👥 **Interações:**
+• Total mensagens: ${stats.totalMessages}
 • Usuários únicos: ${stats.uniqueUsers}
+• Interações pessoais: ${stats.personalInteractions}
 
-🤖 Performance IA:
+🧠 **Performance IA:**
 • Respostas IA: ${stats.aiResponses}
 • Respostas fallback: ${stats.fallbackResponses}
-• Pedidos de imagens: ${stats.imageRequests}
-• Pedidos de localização: ${stats.locationRequests}
-• Pedidos de galeria: ${stats.galleryRequests}
-• Taxa sucesso IA: ${stats.aiSuccessRate}
-• Erros: ${stats.errors}
-
-⚙ Sistema Railway:
-• Provedor: ${aiStats.provider.toUpperCase()}
+• Taxa sucesso: ${stats.aiSuccessRate}
 • Conversas ativas: ${aiStats.activeConversations}
-• Tempo ativo: ${stats.uptime}
-• WhatsApp: ${clientReady ? 'Conectado' : 'Desconectado'}
+• Perfis salvos: ${aiStats.totalProfiles}
 
-Última atualização: ${new Date().toLocaleString('pt-BR')}`);
+📸 **Mídia:**
+• Pedidos imagens: ${stats.imageRequests}
+• Pedidos localização: ${stats.locationRequests}
+• Pedidos galeria: ${stats.galleryRequests}
+
+⚙ **Sistema:**
+• Provedor: ${aiStats.provider.toUpperCase()}
+• Tempo ativo: ${stats.uptime}
+• Erros: ${stats.errors}
+• WhatsApp: ${clientReady ? '✅ Conectado' : '❌ Desconectado'}
+
+💁‍♀️ **Ágatha Status:** ${clientReady ? 'Online e Feliz!' : 'Reconectando...'}
+
+Atualizado: ${new Date().toLocaleString('pt-BR')}`);
             break;
             
         case '!health':
@@ -938,46 +1059,60 @@ client.on('message', async msg => {
             const uptime = process.uptime();
             const memory = process.memoryUsage();
             
-            await msg.reply(`🏥 STATUS RAILWAY
+            await msg.reply(`💁‍♀️ **ÁGATHA - STATUS RAILWAY**
 
-⏱ Uptime: ${Math.floor(uptime / 60)} minutos
-💾 Memória: ${Math.round(memory.rss / 1024 / 1024)} MB
-🤖 IA: ${AI_CONFIG.provider.toUpperCase()} - ${aiService.model ? 'Conectada' : 'Fallback'}
-📱 WhatsApp: ${clientReady ? 'Conectado' : 'Reconectando...'}
-👥 Usuários ativos: ${userStates.size}
-🌐 Platform: Railway
+⏱ **Uptime:** ${Math.floor(uptime / 60)} minutos
+💾 **Memória:** ${Math.round(memory.rss / 1024 / 1024)} MB
+🧠 **IA:** ${AI_CONFIG.provider.toUpperCase()} - ${aiService.model ? 'Conectada' : 'Fallback'}
+📱 **WhatsApp:** ${clientReady ? 'Conectado' : 'Reconectando...'}
+👥 **Usuários ativos:** ${userStates.size}
+🌐 **Platform:** Railway
 
-Status geral: ✅ Funcionando`);
+💁‍♀️ **Status Ágatha:** ✅ Funcionando perfeitamente e pronta para ajudar!
+
+🤗 **Personalidade:** Carinhosa, Prestativa e muito Humana!`);
             break;
             
         case '!clear':
             userStates.clear();
             aiService.conversationHistory.clear();
-            await msg.reply(`🧹 LIMPEZA RAILWAY
+            await msg.reply(`🧹 **ÁGATHA - LIMPEZA RAILWAY**
 
-• Estados de usuários limpos
-• Histórico de conversas limpo
-• Cache liberado
-• Memória otimizada`);
+• Estados de usuários limpos ✅
+• Histórico de conversas limpo ✅  
+• Perfis pessoais limpos ✅
+• Cache liberado ✅
+• Memória otimizada ✅
+
+💁‍♀️ Ágatha resetada e pronta para novas conversas! 😊`);
             break;
             
-        case '!railway':
+        case '!agatha':
         case '!info':
-            await msg.reply(`🚀 TRAVEL BOSS BOT - RAILWAY
+            await msg.reply(`💁‍♀️ **ÁGATHA - TRAVEL BOSS AI ASSISTANT**
 
-🌐 URL Base: https://your-app.railway.app
-📊 Health: /health
-📈 Status: /status
-🔍 QR Code: /qr
+🌐 **URL Base:** https://your-app.railway.app
+📊 **Health:** /health
+📈 **Status:** /status  
+🔍 **QR Code:** /qr
 
-🔧 Comandos Admin:
+🤖 **Sobre a Ágatha:**
+• Nome: Ágatha
+• Idade: 28 anos
+• Formação: Turismo e Relações Internacionais
+• Experiência: 3 anos na Travel Boss
+• Personalidade: Humana, Carinhosa, Prestativa
+• Idiomas: PT, EN, ES, FR, RU, IT, KIM, DE
+
+🔧 **Comandos Admin:**
 • !stats - Estatísticas completas
 • !health - Status do sistema
 • !clear - Limpar cache
-• !railway - Esta informação
+• !agatha - Esta informação
 
-Platform: Railway ✅
-Version: 2.0.1 Production`);
+**Platform:** Railway ✅
+**Version:** 3.0.0 - Human-Like
+**Status:** Online e Sorrindo! 😊`);
             break;
     }
 });
@@ -985,7 +1120,7 @@ Version: 2.0.1 Production`);
 // Limpeza automática otimizada para Railway
 setInterval(() => {
     const now = Date.now();
-    const timeout = 2 * 60 * 60 * 1000; // 2 horas
+    const timeout = 3 * 60 * 60 * 1000; // 3 horas (mais tempo para conversas naturais)
     let cleaned = 0;
     
     for (const [userId, state] of userStates.entries()) {
@@ -997,42 +1132,42 @@ setInterval(() => {
     }
     
     if (cleaned > 0) {
-        console.log(`🧹 Limpeza Railway: ${cleaned} usuários inativos removidos`);
+        console.log(`🧹 Ágatha: ${cleaned} usuários inativos removidos com carinho`);
     }
     
     // Força garbage collection se disponível
     if (global.gc) {
         global.gc();
     }
-}, 30 * 60 * 1000); // 30 minutos
+}, 45 * 60 * 1000); // 45 minutos
 
 // Tratamento graceful de encerramento (Railway)
 process.on('SIGTERM', async () => {
-    console.log('\n🛑 SIGTERM recebido - Encerrando TravelBot Railway...');
+    console.log('\n🛑 SIGTERM recebido - Ágatha se despedindo...');
     
     try {
         if (client && clientReady) {
             await client.destroy();
         }
-        console.log('✅ WhatsApp cliente desconectado');
+        console.log('✅ Ágatha desconectada com elegância');
         process.exit(0);
     } catch (error) {
-        console.error('❌ Erro ao desconectar:', error);
+        console.error('❌ Erro ao desconectar Ágatha:', error);
         process.exit(1);
     }
 });
 
 process.on('SIGINT', async () => {
-    console.log('\n🛑 SIGINT recebido - Encerrando TravelBot Railway...');
+    console.log('\n🛑 SIGINT recebido - Ágatha se despedindo...');
     
     try {
         if (client && clientReady) {
             await client.destroy();
         }
-        console.log('✅ WhatsApp cliente desconectado');
+        console.log('✅ Ágatha desconectada com elegância');
         process.exit(0);
     } catch (error) {
-        console.error('❌ Erro ao desconectar:', error);
+        console.error('❌ Erro ao desconectar Ágatha:', error);
         process.exit(1);
     }
 });
@@ -1048,7 +1183,7 @@ process.on('uncaughtException', (error) => {
 });
 
 // Inicialização otimizada para Railway
-console.log('🚀 Iniciando Travel Boss AI Bot no Railway...');
+console.log('💁‍♀️ Iniciando Ágatha - Travel Boss AI Assistant no Railway...');
 console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 console.log(`🧠 Provedor de IA: ${AI_CONFIG.provider.toUpperCase()}`);
 console.log(`🔧 Port: ${PORT}`);
@@ -1060,20 +1195,22 @@ if (AI_CONFIG.provider === 'google') {
         console.log('💡 Obtenha chave gratuita em: https://makersuite.google.com/app/apikey');
         process.exit(1);
     }
-    console.log('✅ Google Gemini configurado para Railway (GRATUITO)');
+    console.log('✅ Ágatha (Google Gemini) configurada para Railway (GRATUITO)');
 } else if (AI_CONFIG.provider === 'openai') {
     if (!AI_CONFIG.openai.apiKey) {
         console.error('❌ OPENAI_API_KEY não configurada!');
         console.log('💡 Configure: railway variables set OPENAI_API_KEY=sua_chave');
         process.exit(1);
     }
-    console.log('✅ OpenAI configurado para Railway');
+    console.log('✅ Ágatha (OpenAI) configurada para Railway');
 }
 
-console.log('📱 Sistema inteligente de conversação ativado');
+console.log('💁‍♀️ Ágatha: Sistema de conversação humana ativado');
+console.log('🤗 Personalidade calorosa e prestativa carregada');
 console.log('🌐 Health Check Server iniciado');
-console.log('🔍 Aguardando conexão WhatsApp...');
+console.log('🔍 Ágatha aguardando conexão WhatsApp...');
 console.log('📱 Para ver QR Code: acesse /qr no navegador');
+console.log('✨ Ágatha está quase pronta para fazer novos amigos!');
 
 // Inicializar cliente WhatsApp
 client.initialize();
